@@ -2,6 +2,17 @@ const React = require('react');
 const Key = require('./key.jsx');
 const emoji = require('./emoji.csv');
 
+const sortedEmoji = emoji.sort((a, b) => {
+	const Achars = Array.from(a.text);
+	const Bchars = Array.from(b.text);
+
+	if (Achars.length !== Bchars.length) {
+		return Achars.length - Bchars.length;
+	}
+
+	return Achars[0].codePointAt(0) - Bchars[0].codePointAt(0);
+});
+
 const emojiTextMap = new Map(emoji.map((entry) => [entry.text, entry]));
 const emojiNameMap = new Map(emoji.map((entry) => [entry.name, entry]));
 
@@ -25,6 +36,16 @@ class App extends React.Component {
 		this.setState({
 			plainText,
 			emojiList,
+		});
+	}
+
+	handleClickDelete = () => {
+		this.state.emojiList.pop();
+		const newPlainText = this.state.emojiList.map((emojiName) => emojiNameMap.get(emojiName).text).join('');
+
+		this.setState({
+			emojiList: this.state.emojiList,
+			plainText: newPlainText,
 		});
 	}
 
@@ -58,8 +79,8 @@ class App extends React.Component {
 	render() {
 		return (
 			<div>
-				<div className="field">
-					<div className="control">
+				<div className="field has-addons">
+					<div className="control text-area">
 						<input
 							className="input"
 							type="text"
@@ -68,10 +89,15 @@ class App extends React.Component {
 							onChange={this.handlePlainTextChange}
 						/>
 					</div>
+					<div className="control">
+						<a className="button is-info" onClick={this.handleClickDelete}>
+							一つ消す
+						</a>
+					</div>
 				</div>
 				<div className="field">
 					<div className="control">
-						<input className="input" type="text" disabled value={this.getEmojiText()}/>
+						<input className="input" type="text" readOnly value={this.getEmojiText()}/>
 					</div>
 				</div>
 				<div className="emoji-images">
@@ -80,7 +106,7 @@ class App extends React.Component {
 				<div className="keyboard">
 					<div className="field is-grouped is-grouped-multiline">
 						{
-							emoji.map(({name, text}) => (
+							sortedEmoji.map(({name, text}) => (
 								<Key
 									key={name}
 									text={text}
