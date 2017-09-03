@@ -23,6 +23,7 @@
     "bulma": "^0.5.1",
     "concurrently": "^3.4.0",
     "css-loader": "^0.28.4",
+    "dsv-loader": "^2.0.0",
     "eslint": "^4.1.0",
     "postcss-flexbugs-fixes": "^3.0.0",
     "postcss-loader": "^2.0.6",

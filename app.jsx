@@ -1,4 +1,7 @@
 const React = require('react');
+const emoji = require('./emoji.csv');
+
+const emojiMap = new Map(emoji.map((entry) => [entry.text, entry]));
 
 class App extends React.Component {
 	constructor(props, state) {
@@ -14,6 +17,12 @@ class App extends React.Component {
 			plainText: event.target.value,
 		});
 	}
+
+	getEmojiText = () => (
+		Array.from(this.state.plainText).map((character) => (
+			`:${emojiMap.get(character).name}:`
+		)).join('')
+	)
 
 	render() {
 		return (
@@ -31,7 +40,7 @@ class App extends React.Component {
 				</div>
 				<div className="field">
 					<div className="control">
-						<input className="input" type="text" disabled value=":fuku:"/>
+						<input className="input" type="text" disabled value={this.getEmojiText()}/>
 					</div>
 				</div>
 			</div>

@@ -44,6 +44,11 @@ module.exports = {
 					sourceMap: true,
 				},
 			}],
+		}, {
+			test: /\.csv$/,
+			use: {
+				loader: 'dsv-loader',
+			},
 		}],
 	},
 };
