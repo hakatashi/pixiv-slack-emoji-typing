@@ -1,7 +1,9 @@
 const React = require('react');
+const Key = require('./key.jsx');
 const emoji = require('./emoji.csv');
 
-const emojiMap = new Map(emoji.map((entry) => [entry.text, entry]));
+const emojiTextMap = new Map(emoji.map((entry) => [entry.text, entry]));
+const emojiNameMap = new Map(emoji.map((entry) => [entry.name, entry]));
 
 class App extends React.Component {
 	constructor(props, state) {
@@ -9,19 +11,48 @@ class App extends React.Component {
 
 		this.state = {
 			plainText: '',
+			emojiList: [],
 		};
 	}
 
 	handlePlainTextChange = (event) => {
+		const plainText = event.target.value;
+
+		const emojiList = Array.from(plainText).map((character) => (
+			emojiTextMap.has(character) ? `${emojiTextMap.get(character).name}` : ''
+		));
+
 		this.setState({
-			plainText: event.target.value,
+			plainText,
+			emojiList,
+		});
+	}
+
+	handleClickKey = (name) => {
+		const newEmejiList = this.state.emojiList.concat([name]);
+		const newPlainText = newEmejiList.map((emojiName) => emojiNameMap.get(emojiName).text).join('');
+
+		this.setState({
+			emojiList: newEmejiList,
+			plainText: newPlainText,
 		});
 	}
 
 	getEmojiText = () => (
-		Array.from(this.state.plainText).map((character) => (
-			`:${emojiMap.get(character).name}:`
+		this.state.emojiList.map((emojiName) => (
+			`:${emojiName}:`
 		)).join('')
+	)
+
+	renderEmojiImages = () => (
+		this.state.emojiList.map((emojiName, index) => (
+			<img
+				key={index}
+				className="emoji-image"
+				src={emojiNameMap.get(emojiName).url}
+				alt={`:${emojiNameMap.get(emojiName).name}:`}
+			/>
+		))
 	)
 
 	render() {
@@ -41,6 +72,23 @@ class App extends React.Component {
 				<div className="field">
 					<div className="control">
 						<input className="input" type="text" disabled value={this.getEmojiText()}/>
+					</div>
+				</div>
+				<div className="emoji-images">
+					{this.renderEmojiImages()}
+				</div>
+				<div className="keyboard">
+					<div className="field is-grouped is-grouped-multiline">
+						{
+							emoji.map(({name, text}) => (
+								<Key
+									key={name}
+									text={text}
+									name={name}
+									onClick={this.handleClickKey}
+								/>
+							))
+						}
 					</div>
 				</div>
 			</div>
