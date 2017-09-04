@@ -13,8 +13,9 @@ const sortedEmoji = emoji.sort((a, b) => {
 	return Achars[0].codePointAt(0) - Bchars[0].codePointAt(0);
 });
 
-const emojiTextMap = new Map(emoji.map((entry) => [entry.text, entry]));
-const emojiNameMap = new Map(emoji.map((entry) => [entry.name, entry]));
+const reversedSortedEmoji = sortedEmoji.slice().reverse();
+
+const emojiMap = new Map(emoji.map((entry) => [entry.name, entry]));
 
 class App extends React.Component {
 	constructor(props, state) {
@@ -29,9 +30,25 @@ class App extends React.Component {
 	handlePlainTextChange = (event) => {
 		const plainText = event.target.value;
 
-		const emojiList = Array.from(plainText).map((character) => (
-			emojiTextMap.has(character) ? `${emojiTextMap.get(character).name}` : ''
-		));
+		let remainingText = plainText;
+		const emojiList = [];
+
+		while (remainingText.length > 0) {
+			let pushed = false;
+
+			for (const {text, name} of reversedSortedEmoji) {
+				if (remainingText.startsWith(text)) {
+					emojiList.push(name);
+					remainingText = remainingText.slice(text.length);
+					pushed = true;
+					break;
+				}
+			}
+
+			if (!pushed) {
+				remainingText = remainingText.slice(1);
+			}
+		}
 
 		this.setState({
 			plainText,
@@ -41,7 +58,7 @@ class App extends React.Component {
 
 	handleClickDelete = () => {
 		this.state.emojiList.pop();
-		const newPlainText = this.state.emojiList.map((emojiName) => emojiNameMap.get(emojiName).text).join('');
+		const newPlainText = this.state.emojiList.map((emojiName) => emojiMap.get(emojiName).text).join('');
 
 		this.setState({
 			emojiList: this.state.emojiList,
@@ -51,7 +68,7 @@ class App extends React.Component {
 
 	handleClickKey = (name) => {
 		const newEmejiList = this.state.emojiList.concat([name]);
-		const newPlainText = newEmejiList.map((emojiName) => emojiNameMap.get(emojiName).text).join('');
+		const newPlainText = newEmejiList.map((emojiName) => emojiMap.get(emojiName).text).join('');
 
 		this.setState({
 			emojiList: newEmejiList,
@@ -70,8 +87,8 @@ class App extends React.Component {
 			<img
 				key={index}
 				className="emoji-image"
-				src={emojiNameMap.get(emojiName).url}
-				alt={`:${emojiNameMap.get(emojiName).name}:`}
+				src={emojiMap.get(emojiName).url}
+				alt={`:${emojiMap.get(emojiName).name}:`}
 			/>
 		))
 	)
@@ -90,7 +107,7 @@ class App extends React.Component {
 						/>
 					</div>
 					<div className="control">
-						<a className="button is-info" onClick={this.handleClickDelete}>
+						<a className="button is-danger" onClick={this.handleClickDelete}>
 							一つ消す
 						</a>
 					</div>
