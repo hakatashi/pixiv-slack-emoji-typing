@@ -1,3 +1,4 @@
+const BabiliPlugin = require('babili-webpack-plugin');
 const {DefinePlugin} = require('webpack');
 
 module.exports = (env = {}) => ({
@@ -6,13 +7,16 @@ module.exports = (env = {}) => ({
 		path: __dirname,
 		filename: 'index.js',
 	},
-	devtool: 'cheap-module-eval-source-map',
+	devtool: env.production ? 'source-map' : 'cheap-module-eval-source-map',
 	plugins: [
 		new DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify(env.production ? 'development' : 'production'),
 			},
 		}),
+		...(env.production ? [
+			new BabiliPlugin(),
+		] : []),
 	],
 	module: {
 		rules: [{

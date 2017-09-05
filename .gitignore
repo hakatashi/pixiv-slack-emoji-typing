@@ -60,4 +60,6 @@ typings/
 yarn.lock
 emoji.csv
 index.js
+index.js.map
+index.html
 .~*
