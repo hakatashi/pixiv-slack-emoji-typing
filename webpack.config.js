@@ -50,6 +50,7 @@ module.exports = (env = {}) => ({
 				loader: 'css-loader',
 				options: {
 					importLoaders: 1,
+					minimize: Boolean(env.production),
 				},
 			}, {
 				loader: 'postcss-loader',
