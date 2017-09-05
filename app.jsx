@@ -1,4 +1,4 @@
-const React = require('react');
+const {h, Component} = require('preact');
 const Key = require('./key.jsx');
 const emoji = require('./emoji.csv');
 
@@ -17,7 +17,9 @@ const reversedSortedEmoji = sortedEmoji.slice().reverse();
 
 const emojiMap = new Map(emoji.map((entry) => [entry.name, entry]));
 
-class App extends React.Component {
+// eslint-disable-next-line valid-jsdoc
+/** @jsx h */
+class App extends Component {
 	constructor(props, state) {
 		super(props, state);
 

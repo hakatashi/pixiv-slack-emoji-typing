@@ -1,6 +1,8 @@
-const React = require('react');
+const {h} = require('preact');
 const PropTypes = require('prop-types');
 
+// eslint-disable-next-line valid-jsdoc
+/** @jsx h */
 const Key = (props) => {
 	const handleButtonClick = () => {
 		props.onClick(props.name);

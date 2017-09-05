@@ -1,5 +1,9 @@
-const React = require('react');
-const ReactDOM = require('react-dom');
+const {h, render} = require('preact');
+
+if (process.env.NODE_ENV === 'development') {
+	// eslint-disable-next-line global-require
+	require('preact/devtools');
+}
 
 const App = require('./app.jsx');
 
@@ -8,4 +12,5 @@ require('./index.pcss');
 
 const reactRoot = document.querySelector('.app');
 
-ReactDOM.render(<App/>, reactRoot);
+/** @jsx h */
+render(<App/>, reactRoot);

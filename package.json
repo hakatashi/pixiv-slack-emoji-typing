@@ -27,10 +27,9 @@
     "eslint": "^4.1.0",
     "postcss-flexbugs-fixes": "^3.0.0",
     "postcss-loader": "^2.0.6",
+    "preact": "^8.2.5",
     "precss": "^2.0.0",
     "pug-cli": "^1.0.0-alpha6",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
     "style-loader": "^0.18.2",
     "webpack": "^3.1.0",
     "webpack-dev-server": "^2.5.1"
